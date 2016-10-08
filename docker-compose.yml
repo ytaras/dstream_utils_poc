@@ -9,15 +9,25 @@ services:
     ports:
       - "9092"
     environment:
+      # TODO - This should be extracted as config param
       KAFKA_ADVERTISED_HOST_NAME: 172.17.0.1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   cassandra-seed:
     image: cassandra
+    ports:
+      - "9042:9042"
   cassandra:
     image: cassandra
     links:
       - cassandra-seed
     environment:
       CASSANDRA_SEEDS: cassandra-seed
+    ports:
+      - "9042"
+  hdfs:
+    image: sequenceiq/hadoop-docker:2.7.0
+    ports:
+      - "50070:50070"
+      - "8020:8020"
